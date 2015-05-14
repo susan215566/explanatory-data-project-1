@@ -1,0 +1,104 @@
+---
+title: "explanatory data project1"
+author: "Jiaoping"
+date: "May 13, 2015"
+output: html_document
+---
+
+load pakacge
+```{r}
+library(sqldf)
+```
+
+load agian
+```{r}
+library(sqldf)
+```
+
+load sepecific data into R
+
+```{r}
+file<-'household_power_consumption.txt'
+con<-file(description=file,open="r")
+mySql <- "SELECT * from file WHERE Date = '1/2/2007' OR Date = '2/2/2007'"
+myFile <- "household_power_consumption.txt"
+myData <- read.csv2.sql(myFile,mySql)
+close(con)
+```
+
+look at the data
+```{r,cache=F}
+head(myData,n=3)
+```
+
+as.date
+```{r}
+x<-as.Date(myData$Date, format="%d/%m/%Y")
+```
+
+```{r}
+datetime <- paste(myData$Date, myData$Time)
+xx<-strptime(datetime, format="%d/%m/%Y %H:%M:%S")
+```
+
+
+make plot1 histogrm and stored in the rmd folder
+```{r}
+png(filename='plot1.png',width=480,height=480,units='px')
+with(myData,hist(Global_active_power, xlab="Global Active Power(kilowatts)", main="Global Active Power",col="red"))
+dev.off()
+```
+
+make plot2
+```{r}
+png(filename='plot2.png',width=480,height=480,units='px')
+with(myData,plot(xx,Global_active_power, ylab="Global Active Power(kilowatts)", main="Global Active Power",type="l"))
+dev.off()
+```
+
+```{r}
+str(myData)
+```
+
+make plot 3
+
+
+```{r}
+png(filename="plot3.png",width=480,height=480,units="px")
+ncol<-c("black","red","blue")
+lbls<-c("Sub_metering_1","Sub_metering_2","Sub_metering_3")
+plot(x=xx,y=myData$Sub_metering_1,ylab="Energy sub meering", xlab="",type="l",col="black")
+lines(x=xx,y=myData$Sub_metering_2,ylab="Energy sub meering", xlab="",type="l",col="red")
+lines(x=xx,y=myData$Sub_metering_3,ylab="Energy sub meering", xlab="",type="l",col="blue")
+legend("topright",c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),col=ncol,lty="solid")
+     y<-dev.off()
+```
+
+make plot 4
+
+```
+```{r}
+png(filename="plot4.png",width=480,height=480,units="px")
+par(mfrow=c(2,2))
+with(myData,hist(Global_active_power, xlab="Global Active Power(kilowatts)", main="Global Active Power",col="red"))
+with(myData,plot(xx,Voltage,xlab='datetime',ylab='Voltage',type='l'))
+ncol<-c("black","red","blue")
+lbls<-c("Sub_metering_1","Sub_metering_2","Sub_metering_3")
+plot(x=xx,y=myData$Sub_metering_1,ylab="Energy sub meering", xlab="",type="l",col="black")
+lines(x=xx,y=myData$Sub_metering_2,ylab="Energy sub meering", xlab="",type="l",col="red")
+lines(x=xx,y=myData$Sub_metering_3,ylab="Energy sub meering", xlab="",type="l",col="blue")
+legend("topright",c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),col=ncol,lty="solid")
+with(myData,plot(xx,Global_reactive_power, type="l",))
+dev.off()
+```
+
+
+
+
+
+
+
+
+
+
+
